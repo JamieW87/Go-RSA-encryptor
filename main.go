@@ -15,16 +15,15 @@ func main() {
 
 	var err error
 
-	if task == "gen" {
-		//gen the priv key and write to file
-		err = services.GenKeys()
-		if err != nil {
-			fmt.Println("Could not generate keys:", err)
-		}
-	}
-
-	if task == "encrypt" {
-
+	switch task {
+		case "gen":
+			//gen the priv key and write to file
+			err = services.GenKeys()
+			if err != nil {
+				fmt.Println("Could not generate keys:", err)
+				return
+			}
+	case "encrypt":
 		//Get key from file
 		privateKey, err := services.GetKeys()
 		if err != nil {
@@ -45,10 +44,8 @@ func main() {
 		}
 
 		fmt.Printf("Encrypted message: %x", cipherText)
-	}
 
-	if task == "decrypt" {
-
+	case "decrypt":
 		//Get key from file
 		privateKey, err := services.GetKeys()
 		if err != nil {
@@ -67,6 +64,10 @@ func main() {
 		}
 
 		fmt.Println("decrypted text: ", string(decryptedText))
+
+	default:
+		fmt.Println("Please enter a valid command: 'encrypt', 'decrypt', or 'gen'.")
+
 	}
 
 }
