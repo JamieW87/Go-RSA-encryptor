@@ -16,13 +16,13 @@ func main() {
 	var err error
 
 	switch task {
-		case "gen":
-			//gen the priv key and write to file
-			err = services.GenKeys()
-			if err != nil {
-				fmt.Println("Could not generate keys:", err)
-				return
-			}
+	case "gen":
+		//gen the priv key and write to file
+		err = services.GenKeys()
+		if err != nil {
+			fmt.Println("Could not generate keys:", err)
+			return
+		}
 	case "encrypt":
 		//Get key from file
 		privateKey, err := services.GetKeys()
@@ -35,7 +35,6 @@ func main() {
 		fmt.Println("Please enter the text you would like to encrypt")
 		fmt.Scan(&text)
 		trimmedText := strings.TrimSuffix(text, "\n")
-
 
 		cipherText, err := services.Encrypt(&privateKey.PublicKey, trimmedText)
 		if err != nil {
@@ -56,7 +55,6 @@ func main() {
 		fmt.Println("Please enter the encrypted text")
 		fmt.Scan(&text)
 
-
 		decryptedText, err := services.Decrypt(privateKey, []byte(text))
 		if err != nil {
 			fmt.Println("Could not decrypt text", err.Error())
@@ -64,6 +62,16 @@ func main() {
 		}
 
 		fmt.Println("decrypted text: ", string(decryptedText))
+
+	case "getPub":
+
+		privateKey, err := services.GetKeys()
+		if err != nil {
+			fmt.Println("Could not retrieve key file", err)
+			return
+		}
+
+		services.GetPubPemFromPrivPem(privateKey)
 
 	default:
 		fmt.Println("Please enter a valid command: 'encrypt', 'decrypt', or 'gen'.")
